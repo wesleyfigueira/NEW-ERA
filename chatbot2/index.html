@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AbleVu AI Assistant</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --white: #ffffff;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+
+        #chat-container { width: 400px; height: 600px; background: var(--white); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 15px; display: flex; flex-direction: column; overflow: hidden; }
+
+        header { background: var(--primary-color); color: var(--white); padding: 20px; text-align: center; font-weight: bold; font-size: 1.2rem; }
+
+        #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+
+        .message { max-width: 80%; padding: 10px 15px; border-radius: 15px; line-height: 1.4; font-size: 0.95rem; }
+        .user { align-self: flex-end; background-color: var(--accent-color); color: white; border-bottom-right-radius: 2px; }
+        .bot { align-self: flex-start; background-color: #e9ecef; color: var(--primary-color); border-bottom-left-radius: 2px; }
+
+        .input-area { border-top: 1px solid #eee; padding: 20px; display: flex; gap: 10px; }
+
+        input { flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 25px; outline: none; transition: border 0.3s; }
+        input:focus { border-color: var(--accent-color); }
+
+        button { background: var(--accent-color); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; transition: opacity 0.3s; }
+        button:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <header>AbleVu AI Assistant</header>
+    <div id="chat-box">
+        <div class="message bot">Hello! I'm the AbleVu Assistant. How can I help you today with accessibility information or partnership details?</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Ask about accessibility..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('user-input');
+        const chatBox = document.getElementById('chat-box');
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        // Add user message to screen
+        chatBox.innerHTML += `<div class="message user">${message}</div>`;
+        input.value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
+
+            const data = await response.json();
+            
+            // Add bot response
+            if (data.response) {
+                chatBox.innerHTML += `<div class="message bot">${data.response}</div>`;
+            } else {
+                chatBox.innerHTML += `<div class="message bot"><i>Error processing response.</i></div>`;
+            }
+        } catch (error) {
+            chatBox.innerHTML += `<div class="message bot"><i>Connection error with the server.</i></div>`;
+        }
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+
+</body>
+</html>
