@@ -13,7 +13,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# Descobre o diretório atual (evita erro 404 no Render)
+# Diretório atual (para servir o index.html)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # ==============================
@@ -94,9 +94,8 @@ def chat():
 
 
 # ==============================
-# 4️⃣ Inicialização para Render
+# 4️⃣ Inicialização LOCAL
 # ==============================
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
