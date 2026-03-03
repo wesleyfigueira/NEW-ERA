@@ -42,7 +42,7 @@ print(f"Tipos de produtos vendidos: {tipo_produto}")
 
 texto= f'''Prezados, segue o relatório de vendas do mês de dezembro.  
 Quantidade de produtos vendidos: {qtde_produtos}
-Faturamento total: R${faturamento}
+Faturamento total: R${faturamento:,.2f}
 Pulseira Estampa Vendidas: {tipo_produto}
 
 
@@ -62,7 +62,7 @@ pyautogui.click(x=202, y=217)
 pyautogui.press('enter')
 time.sleep(5)
 
-pyautogui.write('anaclima.34@gmail.com')
+pyautogui.write('ninofigueira2015@gmail.com')
 time.sleep(5)
 pyautogui.press('tab') 
 time.sleep(2)
